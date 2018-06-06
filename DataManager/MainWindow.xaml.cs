@@ -30,10 +30,6 @@ namespace DataManager
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void AddButton_Click(object sender, RoutedEventArgs e)
-        {
             this.Content = new SeriesPage();
         }
     }    
