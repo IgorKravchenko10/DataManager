@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="DataManager.Views.PathControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DataManager.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="465">
+    <Grid>
+        <StackPanel Orientation="Horizontal" >
+            <Label Content="Path:" VerticalAlignment="Center"/>
+            <TextBox x:Name="pathTextBox" Text="{Binding Path}" Margin="10, 5, 10, 5" MinWidth="300"/>
+            <Button Content="..." HorizontalAlignment="Right" MinWidth="50" Margin="0, 5, 0, 5" Click="Button_Click" />
+            <Button Content="Remove" HorizontalAlignment="Right" MinWidth="50" Margin="5, 5, 0, 5" Click="Button_Click_1"></Button>
+        </StackPanel>
+    </Grid>
+</UserControl>
