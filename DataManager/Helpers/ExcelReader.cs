@@ -5,71 +5,49 @@ using LiveCharts.Helpers;
 using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.OleDb;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
-using Excel = Microsoft.Office.Interop.Excel;
 
 namespace DataManager.Helpers
 {
-    public class ExcelReader : IDisposable
+    public static class ExcelReader
     {
-        Excel.Application _excelApp;
-        Excel.Workbook _excelWorkbook;
-        Excel._Worksheet _excelWorksheet;
-        Excel.Range _excelRange;
-
-        public ExcelReader(string fileName, int sheet = 1)
+        public static List<ColumnData> GetData(string fileName)
         {
-            _excelApp = new Excel.Application();
-            _excelWorkbook = _excelApp.Workbooks.Open(fileName);
-            _excelWorksheet = _excelWorkbook.Sheets[sheet];
-            _excelRange = _excelWorksheet.UsedRange;
-        }        
+            var connectionString = string.Format("Provider=Microsoft.ACE.OLEDB.12.0;extended properties=\"excel 8.0;hdr=no;IMEX=1\";data source={0}", fileName);
 
-        public List<ColumnData> GetData()
-        {
-            List<ColumnData> series = new List<ColumnData>();
-            int rowCount = _excelRange.Rows.Count;
-            int columnCount = _excelRange.Columns.Count;
-            
-            for (int i = 1; i <= columnCount; i++)
-            {
-                series.Add(this.GetColumn(rowCount, i));
-            }
-            return series;
+            var adapter = new OleDbDataAdapter("SELECT * FROM [Лист1$]", connectionString);
+            var dataSet = new DataSet();
+
+            adapter.Fill(dataSet, "Values");
+
+            var data = dataSet.Tables["Values"].AsEnumerable();
+            return TransformData(data.ToList());
         }
 
-        private ColumnData GetColumn(int rowCount, int column)
+        private static List<ColumnData> TransformData(List<DataRow> inputData)
         {
-            ColumnData columnData = new ColumnData();
-            for (int j = 1; j <= rowCount; j++)
+            List<ColumnData> outputData = new List<ColumnData>();
+            for (int column = 0; column < inputData[0].ItemArray.Length; column++)
             {
-                if (_excelRange.Cells[j, column] != null && _excelRange.Cells[j, column].Value2 != null)
+                ColumnData columnData = new ColumnData();
+                columnData.Column = column;
+                for (int row = 0; row < inputData.Count; row++)
                 {
-                    columnData.Values.Add(_excelRange.Cells[j, column].Value2);
-                    columnData.Column = column;
+                    if (!(inputData[row].ItemArray[column] is DBNull))
+                    {
+                        columnData.Values.Add(Convert.ToDouble(inputData[row].ItemArray[column]));
+                    }
                 }
+                outputData.Add(columnData);
             }
-            return columnData;
-        }
-
-        public void Dispose()
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-
-            Marshal.ReleaseComObject(_excelRange);
-            Marshal.ReleaseComObject(_excelWorksheet);
-
-            _excelWorkbook.Close();
-            Marshal.ReleaseComObject(_excelWorkbook);
-
-            _excelApp.Quit();
-            Marshal.ReleaseComObject(_excelApp);
+            return outputData;
         }
     }
 }

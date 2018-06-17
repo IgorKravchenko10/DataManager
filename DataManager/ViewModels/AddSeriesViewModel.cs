@@ -61,7 +61,7 @@ namespace DataManager.ViewModels
         {
             List<List<LineSeries>> fullList = new List<List<LineSeries>>();
             List<Task<List<ColumnData>>> tasks = new List<Task<List<ColumnData>>>();
-            
+
             foreach (string pathItem in this.Paths)
             {
                 if (!String.IsNullOrEmpty(pathItem) && !String.IsNullOrEmpty(this.SeriesTitle) && this.Color != null)
@@ -70,10 +70,7 @@ namespace DataManager.ViewModels
                     {
                         System.Diagnostics.Debug.WriteLine("Started");
                         List<ColumnData> columns;
-                        using (ExcelReader reader = new ExcelReader(pathItem))
-                        {
-                            columns = reader.GetData();
-                        }
+                        columns = ExcelReader.GetData(pathItem);
                         System.Diagnostics.Debug.WriteLine("End");
                         return columns;
                     }));
@@ -102,7 +99,7 @@ namespace DataManager.ViewModels
 
         private List<LineSeries> GetSeries(List<ColumnData> columns)
         {
-            
+
             List<LineSeries> lineSeriesCollection = new List<LineSeries>();
             App.Current.Dispatcher.Invoke(() =>
             {
@@ -114,13 +111,13 @@ namespace DataManager.ViewModels
                         //Values = values.AsGearedValues().WithQuality(Quality.Low),
                         Values = column.Values.AsChartValues(),
                         Fill = Brushes.Transparent,
-                        Stroke = this.Color,                        
+                        Stroke = this.Color,
                         StrokeThickness = .5,
                     };
                     lineSeriesCollection.Add(lineSeries);
                 }
             });
-            
+
             return lineSeriesCollection;
         }
     }

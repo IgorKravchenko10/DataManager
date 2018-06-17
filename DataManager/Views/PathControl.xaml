@@ -9,7 +9,7 @@
     <Grid>
         <StackPanel Orientation="Horizontal" >
             <Label Content="Path:" VerticalAlignment="Center"/>
-            <TextBox x:Name="pathTextBox" Text="{Binding Path}" Margin="10, 5, 10, 5" MinWidth="300"/>
+            <TextBox x:Name="pathTextBox" IsEnabled="False" Text="{Binding Path}" Margin="10, 5, 10, 5" MinWidth="300"/>
             <Button Content="..." HorizontalAlignment="Right" MinWidth="50" Margin="0, 5, 0, 5" Click="Button_Click" />
             <Button Content="Remove" HorizontalAlignment="Right" MinWidth="50" Margin="5, 5, 0, 5" Click="Button_Click_1"></Button>
         </StackPanel>

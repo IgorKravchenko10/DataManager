@@ -41,7 +41,7 @@
                 </StackPanel>
             </StackPanel>
         </GroupBox>
-        <lvc:CartesianChart Grid.Row="2" Grid.Column="1" Series="{Binding SeriesCollection}" Zoom="{Binding ZoomingMode}" >
+        <lvc:CartesianChart Grid.Row="2" Grid.Column="1" Series="{Binding SeriesCollection}" Hoverable="False" DisableAnimations="True" Zoom="{Binding ZoomingMode}" >
             <lvc:CartesianChart.AxisY>
                 <lvc:Axis Title="Coordinates" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
             </lvc:CartesianChart.AxisY>
